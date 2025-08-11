@@ -1,2 +1,7 @@
-# Discord-Bot-Imagine-LlamaAi
-Discord bot Image Generate And chatbor llama Ai
+## Run
+```bash
+npm install
+```
+```bash
+node indez.js
+```
