@@ -82,49 +82,59 @@ async function registerCommands() {
     new SlashCommandBuilder()
       .setName('channel')
       .setDescription('Channel management commands')
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('setimagine')
-          .setDescription('Set a channel for automatic image generation')
-          .addChannelOption(option =>
-            option.setName('channel')
-              .setDescription('The channel to set for image generation')
-              .setRequired(true)
+      .addSubcommandGroup(group =>
+        group
+          .setName('set')
+          .setDescription('Set channels for various functions')
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('imagine')
+              .setDescription('Set a channel for automatic image generation')
+              .addChannelOption(option =>
+                option.setName('channel')
+                  .setDescription('The channel to set for image generation')
+                  .setRequired(true)
+              )
+          )
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('ai')
+              .setDescription('Set a channel for AI responses')
+              .addChannelOption(option =>
+                option.setName('channel')
+                  .setDescription('The channel to set for AI responses')
+                  .setRequired(true)
+              )
+          )
+      )
+      .addSubcommandGroup(group =>
+        group
+          .setName('remove')
+          .setDescription('Remove channels from various functions')
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('imagine')
+              .setDescription('Remove a channel from automatic image generation')
+              .addChannelOption(option =>
+                option.setName('channel')
+                  .setDescription('The channel to remove from image generation')
+                  .setRequired(true)
+              )
+          )
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('ai')
+              .setDescription('Remove a channel from AI responses')
+              .addChannelOption(option =>
+                option.setName('channel')
+                  .setDescription('The channel to remove from AI responses')
+                  .setRequired(true)
+              )
           )
       )
       .addSubcommand(subcommand =>
         subcommand
-          .setName('setimagine-remove')
-          .setDescription('Remove a channel from automatic image generation')
-          .addChannelOption(option =>
-            option.setName('channel')
-              .setDescription('The channel to remove from image generation')
-              .setRequired(true)
-          )
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('setai')
-          .setDescription('Set a channel for AI responses')
-          .addChannelOption(option =>
-            option.setName('channel')
-              .setDescription('The channel to set for AI responses')
-              .setRequired(true)
-          )
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('setai-remove')
-          .setDescription('Remove a channel from AI responses')
-          .addChannelOption(option =>
-            option.setName('channel')
-              .setDescription('The channel to remove from AI responses')
-              .setRequired(true)
-          )
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('setting')
+          .setName('settings')
           .setDescription('View current channel settings')
       )
       .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
@@ -165,66 +175,74 @@ async function registerCommands() {
     new SlashCommandBuilder()
       .setName('blacklist')
       .setDescription('Blacklist management commands (Owner only)')
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('add')
-          .setDescription('Add user or server to blacklist')
-          .addStringOption(option =>
-            option.setName('type')
-              .setDescription('Type to blacklist')
-              .setRequired(true)
-              .addChoices(
-                { name: 'user', value: 'user' },
-                { name: 'server', value: 'server' }
+      .addSubcommandGroup(group =>
+        group
+          .setName('user')
+          .setDescription('User blacklist management')
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('add')
+              .setDescription('Add user to permanent blacklist')
+              .addStringOption(option =>
+                option.setName('id')
+                  .setDescription('User ID')
+                  .setRequired(false)
+              )
+              .addUserOption(option =>
+                option.setName('user')
+                  .setDescription('User to blacklist')
+                  .setRequired(false)
               )
           )
-          .addStringOption(option =>
-            option.setName('id')
-              .setDescription('User ID or Server ID')
-              .setRequired(false)
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('remove')
+              .setDescription('Remove user from blacklist')
+              .addStringOption(option =>
+                option.setName('id')
+                  .setDescription('User ID')
+                  .setRequired(false)
+              )
+              .addUserOption(option =>
+                option.setName('user')
+                  .setDescription('User to remove from blacklist')
+                  .setRequired(false)
+              )
           )
-          .addUserOption(option =>
-            option.setName('user')
-              .setDescription('User to blacklist')
-              .setRequired(false)
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('list')
+              .setDescription('List all blacklisted users')
           )
       )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('remove')
-          .setDescription('Remove user or server from blacklist')
-          .addStringOption(option =>
-            option.setName('type')
-              .setDescription('Type to remove from blacklist')
-              .setRequired(true)
-              .addChoices(
-                { name: 'user', value: 'user' },
-                { name: 'server', value: 'server' }
+      .addSubcommandGroup(group =>
+        group
+          .setName('server')
+          .setDescription('Server blacklist management')
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('add')
+              .setDescription('Add server to blacklist')
+              .addStringOption(option =>
+                option.setName('serverid')
+                  .setDescription('Server ID to blacklist')
+                  .setRequired(true)
               )
           )
-          .addStringOption(option =>
-            option.setName('id')
-              .setDescription('User ID or Server ID')
-              .setRequired(false)
-          )
-          .addUserOption(option =>
-            option.setName('user')
-              .setDescription('User to remove from blacklist')
-              .setRequired(false)
-          )
-      )
-      .addSubcommand(subcommand =>
-        subcommand
-          .setName('list')
-          .setDescription('List blacklisted users or servers')
-          .addStringOption(option =>
-            option.setName('type')
-              .setDescription('Type to list')
-              .setRequired(true)
-              .addChoices(
-                { name: 'user', value: 'user' },
-                { name: 'server', value: 'server' }
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('remove')
+              .setDescription('Remove server from blacklist')
+              .addStringOption(option =>
+                option.setName('serverid')
+                  .setDescription('Server ID to remove from blacklist')
+                  .setRequired(true)
               )
+          )
+          .addSubcommand(subcommand =>
+            subcommand
+              .setName('list')
+              .setDescription('List all blacklisted servers')
           )
       ),
     new SlashCommandBuilder()
@@ -327,11 +345,13 @@ client.on('interactionCreate', async interaction => {
       await handleSlashAIRequest(interaction, prompt);
     }
   } else if (commandName === 'channel') {
+    const subcommandGroup = options.getSubcommandGroup();
     const subcommand = options.getSubcommand();
-    const channel = options.getChannel('channel');
-
-    switch (subcommand) {
-      case 'setimagine':
+    
+    if (subcommandGroup === 'set') {
+      const channel = options.getChannel('channel');
+      
+      if (subcommand === 'imagine') {
         const serverSettings = getServerSettings(interaction.guild.id);
         if (!serverSettings.imagine.includes(channel.id)) {
           serverSettings.imagine.push(channel.id);
@@ -355,39 +375,10 @@ client.on('interactionCreate', async interaction => {
 
           await interaction.reply({ embeds: [errorEmbed] });
         }
-        break;
-
-      case 'setimagine-remove':
-        const serverSettingsRemove = getServerSettings(interaction.guild.id);
-        const index = serverSettingsRemove.imagine.indexOf(channel.id);
-        if (index > -1) {
-          serverSettingsRemove.imagine.splice(index, 1);
-          saveChannelSettings();
-
-          const successEmbed = new EmbedBuilder()
-            .setTitle('Image Generation Channel Removed')
-            .setDescription(`Successfully removed ${channel} from automatic image generation!`)
-            .setColor(config.successColor)
-            .setFooter({ text: `Requested By: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() })
-            .setTimestamp();
-
-          await interaction.reply({ embeds: [successEmbed] });
-        } else {
-          const errorEmbed = new EmbedBuilder()
-            .setTitle('Error')
-            .setDescription(`${channel} is not set for image generation!`)
-            .setColor(config.errorColor)
-            .setFooter({ text: `Requested By: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() })
-            .setTimestamp();
-
-          await interaction.reply({ embeds: [errorEmbed] });
-        }
-        break;
-
-      case 'setai':
-        const serverSettingsAI = getServerSettings(interaction.guild.id);
-        if (!serverSettingsAI.ai.includes(channel.id)) {
-          serverSettingsAI.ai.push(channel.id);
+      } else if (subcommand === 'ai') {
+        const serverSettings = getServerSettings(interaction.guild.id);
+        if (!serverSettings.ai.includes(channel.id)) {
+          serverSettings.ai.push(channel.id);
           saveChannelSettings();
 
           const successEmbed = new EmbedBuilder()
@@ -408,13 +399,40 @@ client.on('interactionCreate', async interaction => {
 
           await interaction.reply({ embeds: [errorEmbed] });
         }
-        break;
+      }
+    } else if (subcommandGroup === 'remove') {
+      const channel = options.getChannel('channel');
+      
+      if (subcommand === 'imagine') {
+        const serverSettings = getServerSettings(interaction.guild.id);
+        const index = serverSettings.imagine.indexOf(channel.id);
+        if (index > -1) {
+          serverSettings.imagine.splice(index, 1);
+          saveChannelSettings();
 
-      case 'setai-remove':
-        const serverSettingsAIRemove = getServerSettings(interaction.guild.id);
-        const aiIndex = serverSettingsAIRemove.ai.indexOf(channel.id);
-        if (aiIndex > -1) {
-          serverSettingsAIRemove.ai.splice(aiIndex, 1);
+          const successEmbed = new EmbedBuilder()
+            .setTitle('Image Generation Channel Removed')
+            .setDescription(`Successfully removed ${channel} from automatic image generation!`)
+            .setColor(config.successColor)
+            .setFooter({ text: `Requested By: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() })
+            .setTimestamp();
+
+          await interaction.reply({ embeds: [successEmbed] });
+        } else {
+          const errorEmbed = new EmbedBuilder()
+            .setTitle('Error')
+            .setDescription(`${channel} is not set for image generation!`)
+            .setColor(config.errorColor)
+            .setFooter({ text: `Requested By: ${interaction.user.username}`, iconURL: interaction.user.avatarURL() })
+            .setTimestamp();
+
+          await interaction.reply({ embeds: [errorEmbed] });
+        }
+      } else if (subcommand === 'ai') {
+        const serverSettings = getServerSettings(interaction.guild.id);
+        const index = serverSettings.ai.indexOf(channel.id);
+        if (index > -1) {
+          serverSettings.ai.splice(index, 1);
           saveChannelSettings();
 
           const successEmbed = new EmbedBuilder()
@@ -435,38 +453,36 @@ client.on('interactionCreate', async interaction => {
 
           await interaction.reply({ embeds: [errorEmbed] });
         }
-        break;
+      }
+    } else if (subcommand === 'settings') {
+      const currentServerSettings = getServerSettings(interaction.guild.id);
+      const imagineChannels = currentServerSettings.imagine.map(id => `<#${id}>`).join('\n') || 'None';
+      const aiChannels = currentServerSettings.ai.map(id => `<#${id}>`).join('\n') || 'None';
 
-      case 'setting':
-        const currentServerSettings = getServerSettings(interaction.guild.id);
-        const imagineChannels = currentServerSettings.imagine.map(id => `<#${id}>`).join('\n') || 'None';
-        const aiChannels = currentServerSettings.ai.map(id => `<#${id}>`).join('\n') || 'None';
+      const settingsEmbed = new EmbedBuilder()
+        .setTitle('Channel Settings')
+        .setDescription(`Current channel configurations for **${interaction.guild.name}**`)
+        .addFields(
+          { name: 'Image Generation Channels', value: imagineChannels, inline: true },
+          { name: 'AI Response Channels', value: aiChannels, inline: true }
+        )
+        .setColor(config.successColor)
+        .setFooter({ text: `Requested By: ${interaction.user.username} | Server ID: ${interaction.guild.id}`, iconURL: interaction.user.avatarURL() })
+        .setTimestamp();
 
-        const settingsEmbed = new EmbedBuilder()
-          .setTitle('Channel Settings')
-          .setDescription(`Current channel configurations for **${interaction.guild.name}**`)
-          .addFields(
-            { name: 'Image Generation Channels', value: imagineChannels, inline: true },
-            { name: 'AI Response Channels', value: aiChannels, inline: true }
-          )
-          .setColor(config.successColor)
-          .setFooter({ text: `Requested By: ${interaction.user.username} | Server ID: ${interaction.guild.id}`, iconURL: interaction.user.avatarURL() })
-          .setTimestamp();
+      const row = new ActionRowBuilder()
+        .addComponents(
+          new ButtonBuilder()
+            .setLabel('Invite Bot')
+            .setURL(`https://discord.com/oauth2/authorize?client_id=${config.clientId}&permissions=1724029901729015&integration_type=0&scope=bot`)
+            .setStyle(ButtonStyle.Link),
+          new ButtonBuilder()
+            .setLabel('Join Server')
+            .setURL(config.support)
+            .setStyle(ButtonStyle.Link)
+        );
 
-        const row = new ActionRowBuilder()
-          .addComponents(
-            new ButtonBuilder()
-              .setLabel('Invite Bot')
-              .setURL(`https://discord.com/oauth2/authorize?client_id=${config.clientId}&permissions=1724029901729015&integration_type=0&scope=bot`)
-              .setStyle(ButtonStyle.Link),
-            new ButtonBuilder()
-              .setLabel('Join Server')
-              .setURL(config.support)
-              .setStyle(ButtonStyle.Link)
-          );
-
-        await interaction.reply({ embeds: [settingsEmbed], components: [row] });
-        break;
+      await interaction.reply({ embeds: [settingsEmbed], components: [row] });
     }
   } else if (commandName === 'blacklist') {
     // Check if user is the owner
@@ -481,15 +497,15 @@ client.on('interactionCreate', async interaction => {
       return;
     }
 
+    const subcommandGroup = options.getSubcommandGroup();
     const subcommand = options.getSubcommand();
-    const type = options.getString('type');
 
-    if (subcommand === 'add') {
-      const userId = options.getString('id');
-      const userOption = options.getUser('user');
-      
-      if (type === 'user') {
+    if (subcommandGroup === 'user') {
+      if (subcommand === 'add') {
+        const userId = options.getString('id');
+        const userOption = options.getUser('user');
         const targetId = userId || userOption?.id;
+
         if (!targetId) {
           const errorEmbed = new EmbedBuilder()
             .setTitle('❌ Error')
@@ -522,47 +538,11 @@ client.on('interactionCreate', async interaction => {
 
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
 
-      } else if (type === 'server') {
-        const serverId = userId;
-        if (!serverId) {
-          const errorEmbed = new EmbedBuilder()
-            .setTitle('❌ Error')
-            .setDescription('Please provide a server ID.')
-            .setColor(config.errorColor)
-            .setTimestamp();
-
-          await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
-          return;
-        }
-
-        if (blacklistedServers.has(serverId)) {
-          const alreadyBlacklistedEmbed = new EmbedBuilder()
-            .setTitle('⚠️ Already Blacklisted')
-            .setDescription(`Server \`${serverId}\` is already blacklisted.`)
-            .setColor(config.errorColor)
-            .setTimestamp();
-
-          await interaction.reply({ embeds: [alreadyBlacklistedEmbed], ephemeral: true });
-          return;
-        }
-
-        blacklistedServers.add(serverId);
-        
-        const successEmbed = new EmbedBuilder()
-          .setTitle('✅ Server Blacklisted')
-          .setDescription(`Successfully blacklisted server \`${serverId}\``)
-          .setColor(config.successColor)
-          .setTimestamp();
-
-        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
-      }
-
-    } else if (subcommand === 'remove') {
-      const userId = options.getString('id');
-      const userOption = options.getUser('user');
-      
-      if (type === 'user') {
+      } else if (subcommand === 'remove') {
+        const userId = options.getString('id');
+        const userOption = options.getUser('user');
         const targetId = userId || userOption?.id;
+
         if (!targetId) {
           const errorEmbed = new EmbedBuilder()
             .setTitle('❌ Error')
@@ -595,8 +575,61 @@ client.on('interactionCreate', async interaction => {
 
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
 
-      } else if (type === 'server') {
-        const serverId = userId;
+      } else if (subcommand === 'list') {
+        const userList = Array.from(permanentBlacklistedUsers);
+        const userMentions = userList.length > 0 
+          ? userList.map(id => `<@${id}> (\`${id}\`)`).join('\n')
+          : 'No users blacklisted';
+
+        const listEmbed = new EmbedBuilder()
+          .setTitle('📋 Blacklisted Users')
+          .setDescription(userMentions)
+          .setColor(config.successColor)
+          .setFooter({ text: `Total: ${userList.length} users` })
+          .setTimestamp();
+
+        await interaction.reply({ embeds: [listEmbed], ephemeral: true });
+      }
+
+    } else if (subcommandGroup === 'server') {
+      if (subcommand === 'add') {
+        const serverId = options.getString('serverid');
+        
+        if (!serverId) {
+          const errorEmbed = new EmbedBuilder()
+            .setTitle('❌ Error')
+            .setDescription('Please provide a server ID.')
+            .setColor(config.errorColor)
+            .setTimestamp();
+
+          await interaction.reply({ embeds: [errorEmbed], ephemeral: true });
+          return;
+        }
+
+        if (blacklistedServers.has(serverId)) {
+          const alreadyBlacklistedEmbed = new EmbedBuilder()
+            .setTitle('⚠️ Already Blacklisted')
+            .setDescription(`Server \`${serverId}\` is already blacklisted.`)
+            .setColor(config.errorColor)
+            .setTimestamp();
+
+          await interaction.reply({ embeds: [alreadyBlacklistedEmbed], ephemeral: true });
+          return;
+        }
+
+        blacklistedServers.add(serverId);
+        
+        const successEmbed = new EmbedBuilder()
+          .setTitle('✅ Server Blacklisted')
+          .setDescription(`Successfully blacklisted server \`${serverId}\``)
+          .setColor(config.successColor)
+          .setTimestamp();
+
+        await interaction.reply({ embeds: [successEmbed], ephemeral: true });
+
+      } else if (subcommand === 'remove') {
+        const serverId = options.getString('serverid');
+        
         if (!serverId) {
           const errorEmbed = new EmbedBuilder()
             .setTitle('❌ Error')
@@ -628,25 +661,8 @@ client.on('interactionCreate', async interaction => {
           .setTimestamp();
 
         await interaction.reply({ embeds: [successEmbed], ephemeral: true });
-      }
 
-    } else if (subcommand === 'list') {
-      if (type === 'user') {
-        const userList = Array.from(permanentBlacklistedUsers);
-        const userMentions = userList.length > 0 
-          ? userList.map(id => `<@${id}> (\`${id}\`)`).join('\n')
-          : 'No users blacklisted';
-
-        const listEmbed = new EmbedBuilder()
-          .setTitle('📋 Blacklisted Users')
-          .setDescription(userMentions)
-          .setColor(config.successColor)
-          .setFooter({ text: `Total: ${userList.length} users` })
-          .setTimestamp();
-
-        await interaction.reply({ embeds: [listEmbed], ephemeral: true });
-
-      } else if (type === 'server') {
+      } else if (subcommand === 'list') {
         const serverList = Array.from(blacklistedServers);
         const serverDisplay = serverList.length > 0 
           ? serverList.map(id => `\`${id}\``).join('\n')
@@ -708,12 +724,12 @@ client.on('interactionCreate', async interaction => {
           .addFields(
             { 
               name: '🖼️ Image Generation', 
-              value: '`/image generate` - Generate images\n`/channel setimagine` - Set image channel', 
+              value: '`/image generate` - Generate images\n`/channel set imagine` - Set image channel', 
               inline: false 
             },
             { 
               name: '🤖 AI Chat', 
-              value: '`/chatbot ai` - Chat with AI\n`/channel setai` - Set AI channel', 
+              value: '`/chatbot ai` - Chat with AI\n`/channel set ai` - Set AI channel', 
               inline: false 
             },
             { 
@@ -723,7 +739,7 @@ client.on('interactionCreate', async interaction => {
             },
             { 
               name: '🔧 Management', 
-              value: '`/channel setting` - View settings\n`/blacklist` - Blacklist management (Owner only)', 
+              value: '`/channel settings` - View settings\n`/channel remove imagine/ai` - Remove channels\n`/blacklist` - Blacklist management (Owner only)', 
               inline: false 
             }
           )
