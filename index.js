@@ -297,6 +297,18 @@ async function registerCommands() {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
+  // Check if command is used in a server (guild)
+  if (!interaction.guild) {
+    const dmErrorEmbed = new EmbedBuilder()
+      .setTitle('❌ Commands only work in servers')
+      .setDescription('This command can only be used in Discord servers, not in direct messages.')
+      .setColor(config.errorColor)
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [dmErrorEmbed], ephemeral: true });
+    return;
+  }
+
   // Check if server is blacklisted
   if (blacklistedServers.has(interaction.guild?.id)) {
     return; // Silently ignore interactions from blacklisted servers
@@ -877,6 +889,18 @@ client.on('interactionCreate', async interaction => {
 
 client.on('messageCreate', async message => {
   if (message.author.bot) return;
+  
+  // Check if message is in a server (guild)
+  if (!message.guild) {
+    const dmErrorEmbed = new EmbedBuilder()
+      .setTitle('❌ Commands only work in servers')
+      .setDescription('Bot functionality is only available in Discord servers, not in direct messages.')
+      .setColor(config.errorColor)
+      .setTimestamp();
+
+    await message.channel.send({ embeds: [dmErrorEmbed] });
+    return;
+  }
   
   // Check if server is blacklisted
   if (blacklistedServers.has(message.guild?.id)) {
